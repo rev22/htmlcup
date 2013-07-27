@@ -15,13 +15,14 @@
 { htmlcup } = require './htmlcup'
 
 title = "Test page for htmlcup library"
-version = "0.1.1"
+version = "0.1.3"
 
 htmlcup.html5Page ->
   @head ->
     @title title
-    @style type: "text/css", """
-body { background:#ddd }
-"""
+    @style type: "text/css",
+      """
+      body { background:#ddd }
+      """
   @body ->
     @p 'Cupcake ipsum dolor. Sit amet I love sugar plum. Tart lollipop topping sugar plum jujubes. Gummi bears marzipan liquorice sweet roll jelly-o applicake topping. Marzipan jelly-o wafer I love gummies marzipan I love fruitcake. Caramels candy canes jelly beans. Sugar plum sesame snaps chupa chups sweet roll. Ice cream candy canes cupcake bonbon wafer. Pastry cotton candy I love. Jujubes pudding jelly beans gummies. Gummies marzipan fruitcake fruitcake pie sweet roll. Sweet jelly fruitcake.'
