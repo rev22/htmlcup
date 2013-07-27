@@ -11,9 +11,10 @@ Usage is quite intuitive, if you already use CoffeeScript and know HTML:
 htmlcup.html5Page ->
   @head ->
     @title 'My sweet test page'
-    @style type: 'text/css', """
-body { background:pink }
-"""
+    @style type: 'text/css',
+      """
+      body { background:pink }
+      """
   @body ->
     @p 'Cupcake ipsum dolor. Sit amet I love sugar plum.'
 ````
