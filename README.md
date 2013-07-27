@@ -1,7 +1,7 @@
 htmlcup
 =======
 
-A htmlcup is an HTML5 code generator.
+```htmlcup``` is an HTML5 code generator.
 
 Usage is intuitive, if you already use CoffeeScript and know HTML:
 
@@ -17,6 +17,47 @@ htmlcup.html5Page ->
       """
   @body ->
     @p 'Cupcake ipsum dolor. Sit amet I love sugar plum.'
+    # And now a list of yummies
+    @ol ->
+      @li "Sweet jelly fruitcake"
+      @li ->
+        @a href: 'http://recipe.com/marzipan', 'Marzipan'
 ````
 
 This is similar in purpose to a templating engine, but more powerful as you have a full programming language in your hands, CoffeeScript.
+
+Extending the library
+=====================
+
+```htmlcup``` is easily extensible through a reflective programming technique:
+
+````coffeescript
+# Convert a list of lines into an html list
+htmlcup = htmlcup.extendObject
+  numberLines: (s) ->
+    @ol ->
+      @li x for x in s.split /\n/
+````
+
+This extension could be used like:
+
+````coffeescript
+htmlcup.html5Page ->
+  @head -> @title "A numbered list of sweets"
+  @body ->
+    @p "These are my favorite sweets: "
+    @numberLines """
+      chocolate
+      liquorice
+      fruitcake
+      """
+````
+
+Licensing and copyright
+=======================
+
+Copyright (c) 2013 Michele Bini
+
+The library is available under the terms of version 3 of the General Public License, which you can read in the file ```COPYING```
+
+The contents of the files in the ```tests/``` directory are additionally available with a permissive MIT-style license, which you can read in ```tests/MIT-LICENSE```

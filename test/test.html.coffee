@@ -12,10 +12,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-{ htmlcup } = require './htmlcup'
+# This test file is additionally available with a MIT-style license.
+# Please consult the MIT-LICENSE file in this directory.
+
+{ htmlcup } = require '../htmlcup'
 
 title = "Test page for htmlcup library"
-version = "0.1.3"
+version = "0.1.3+1"
 
 htmlcup.html5Page ->
   @head ->
