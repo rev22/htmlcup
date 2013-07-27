@@ -3,7 +3,7 @@ htmlcup
 
 A htmlcup is an HTML5 code generator.
 
-Usage is quite intuitive, if you already use CoffeeScript and know HTML:
+Usage is intuitive, if you already use CoffeeScript and know HTML:
 
 ````coffeescript
 { htmlcup } = require './htmlcup'
