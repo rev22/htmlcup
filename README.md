@@ -12,7 +12,7 @@ htmlcup.html5Page ->
   @head ->
     @title "My sweet test page"
     @style type: "text/css", """
-body { background:#ddd }
+body { background:pink }
 """
   @body ->
     @p 'Cupcake ipsum dolor. Sit amet I love sugar plum.'
