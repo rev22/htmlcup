@@ -60,4 +60,4 @@ Copyright (c) 2013 Michele Bini
 
 The library is available under the terms of version 3 of the General Public License, which you can read in the file ```COPYING```
 
-The contents of the files in the ```tests/``` directory are additionally available with a permissive MIT-style license, which you can read in ```tests/MIT-LICENSE```
+The contents of the files in the ```test/``` directory are additionally available with a permissive MIT-style license, which you can read in ```test/MIT-LICENSE```
