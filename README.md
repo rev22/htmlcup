@@ -10,8 +10,8 @@ Usage is quite intuitive, if you already use CoffeeScript and know HTML:
 
 htmlcup.html5Page ->
   @head ->
-    @title "My sweet test page"
-    @style type: "text/css", """
+    @title 'My sweet test page'
+    @style type: 'text/css', """
 body { background:pink }
 """
   @body ->
