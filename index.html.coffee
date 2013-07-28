@@ -16,7 +16,25 @@ title = "@htmlcup"
 
 { htmlcup } = require "./htmlcup"
 
+argv = process.argv
+args = argv[1..]
+progname = argv[0]
+stdout = process.stdout
+stderr = process.stderr
+write = (msg) -> stdout.write msg
+echo = (msg) -> write "#{msg}\n"
+warn = (msg) -> stderr.write "#{progname}: #{msg}\n"
+exit = process.exit
+die = (msg) -> warn msg; exit 1
+
+{ readFileSync } = require 'fs'
 isString = (f) -> typeof f is "string" or f instanceof String
+
+testCode = readFileSync("./test/test.html.coffee")
+testCode = testCode.toString() if testCode
+die "No test code could be obtained!" unless testCode? and testCode and /./.test(testCode)
+stripCode = (c) -> c.replace(/(\n|.)*\nhtmlcup[.]/, "htmlpup.")
+testCode = stripCode testCode
 
 # No actual minification at the moment, just print code
 minify = (f) ->
@@ -51,7 +69,7 @@ htmlcup.html5Page ->
         opacity:0.2;
       }
       #sourcepane:hover {
-        opacity:0.8;
+        opacity:0.83;
       }
       """
   @body ->
@@ -64,19 +82,22 @@ htmlcup.html5Page ->
         left:20%;
         position:absolute;
         z-index:1000000;
-        """, """
-        htmlcup.html5Page ->
-          @head ->
-            @title 'My sweet test page'
-            @style type: 'text/css', \"body { background:pink }\"
-          @body ->
-            @p 'Cupcake ipsum dolor. Sit amet I love sugar plum.'
-            # And now a list of yummies
-            @ol ->
-              @li \"Sweet jelly fruitcake\"
-              @li ->
-                @a href: 'http://recipe.com/marzipan', 'Marzipan'
-        """
+        """, testCode
+        # """
+        # htmlcup.html5Page ->
+        #   @head ->
+        #     @title 'My sweet test page'
+        #     @style type: 'text/css', \"body { background:pink }\"
+        #   @body ->
+        #     @p 'Cupcake ipsum dolor. Sit amet I love sugar plum.'
+        #     # And now a list of yummies
+        #     @ol ->
+        #       @li \"Sweet jelly fruitcake\"
+        #       @li ->
+        #         @a href: 'http://recipe.com/marzipan', 'Marzipan'
+        #     @h2 \"Loops: print cubes of numbers from 1 to 100\"
+        #     @span \"#{x*x*x} \" for x in [1..100]
+        #     """
     @javaScriptSource "http://js2coffee.org/scripts/coffeescript.min.js"
     @javaScriptSource "htmlcup.js"
     @coffeeScript ->

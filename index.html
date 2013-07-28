@@ -16,23 +16,29 @@
   opacity:0.2;
 }
 #sourcepane:hover {
-  opacity:0.8;
+  opacity:0.83;
 }</style></head><body><div class="fullpage"><iframe class="fullpage" style="position:absolute"></iframe><textarea id="sourcepane" style="width:60%;
 height:60%;
 top:20%;
 left:20%;
 position:absolute;
-z-index:1000000;">htmlcup.html5Page ->
+z-index:1000000;">htmlpup.html5Page ->
   @head ->
-    @title 'My sweet test page'
-    @style type: 'text/css', "body { background:pink }"
+    @title title
+    @style type: "text/css",
+      """
+      body { background:pink }
+      """
   @body ->
     @p 'Cupcake ipsum dolor. Sit amet I love sugar plum.'
-    # And now a list of yummies
+    # And now a list
     @ol ->
       @li "Sweet jelly fruitcake"
       @li ->
-        @a href: 'http://recipe.com/marzipan', 'Marzipan'</textarea></div><script type="text/javascript" src="http://js2coffee.org/scripts/coffeescript.min.js"></script><script type="text/javascript" src="htmlcup.js"></script><script type="text/javascript">(function () {
+        @a href: 'http://recipe.com/marzipan', 'Marzipan'
+    @h2 "Loops: print cubes of numbers from 1 to 150"
+    @span "#{x*x*x}" for x in [1..150]
+</textarea></div><script type="text/javascript" src="http://js2coffee.org/scripts/coffeescript.min.js"></script><script type="text/javascript" src="htmlcup.js"></script><script type="text/javascript">(function () {
         var clearLoadTimeout, rmTag, sourcePane, update;
         rmTag = function(x) {
           return x.parentNode.removeChild(x);
@@ -105,7 +111,6 @@ z-index:1000000;">htmlcup.html5Page ->
           var body, headStyles, headTitle, innerDocument, style, x, _i, _j, _len, _len1, _ref, _ref1;
           _ref = CoffeeScript["eval"](sourcePane.value), body = _ref.body, headTitle = _ref.headTitle, headStyles = _ref.headStyles;
           innerDocument = window.frames[0].window.document;
-          innerDocument.getElementsByTagName("body")[0].innerHTML = body;
           innerDocument.title = headTitle;
           _ref1 = innerDocument.head.getElementsByTagName("style");
           for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
@@ -120,7 +125,8 @@ z-index:1000000;">htmlcup.html5Page ->
               innerDocument.getElementsByTagName("head")[0].appendChild(x);
             }
           }
-          return document.title = headTitle != null ? headTitle : "@htmlcup";
+          document.title = headTitle != null ? headTitle : "@htmlcup";
+          return innerDocument.getElementsByTagName("body")[0].innerHTML = body;
         };
         sourcePane.onchange = update;
         sourcePane.onkeyup = function() {
