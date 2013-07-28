@@ -93,4 +93,4 @@ track, u, ul, var, video, wbr
 
 lib = lib.compileLib()
 
-exports.htmlcup = lib
+(exports ? window).htmlcup = lib
