@@ -18,7 +18,7 @@
 { htmlcup } = require '../htmlcup'
 
 title = "Test page for htmlcup library"
-version = "0.1.3+1"
+version = "0.2.0"
 
 htmlcup.html5Page ->
   @head ->
@@ -28,4 +28,11 @@ htmlcup.html5Page ->
       body { background:#ddd }
       """
   @body ->
-    @p 'Cupcake ipsum dolor. Sit amet I love sugar plum. Tart lollipop topping sugar plum jujubes. Gummi bears marzipan liquorice sweet roll jelly-o applicake topping. Marzipan jelly-o wafer I love gummies marzipan I love fruitcake. Caramels candy canes jelly beans. Sugar plum sesame snaps chupa chups sweet roll. Ice cream candy canes cupcake bonbon wafer. Pastry cotton candy I love. Jujubes pudding jelly beans gummies. Gummies marzipan fruitcake fruitcake pie sweet roll. Sweet jelly fruitcake.'
+    @p 'Cupcake ipsum dolor. Sit amet I love sugar plum.'
+    # And now a list
+    @ol ->
+      @li "Sweet jelly fruitcake"
+      @li ->
+        @a href: 'http://recipe.com/marzipan', 'Marzipan'
+    @h2 "Loops: print cubes of numbers from 1 to 150"
+    @span "#{x*x*x}" for x in [1..150]
