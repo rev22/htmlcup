@@ -69,7 +69,7 @@ htmlcup.html5Page ->
         opacity:0.2;
       }
       #sourcepane:hover {
-        opacity:0.83;
+        opacity:0.88;
       }
       """
   @body ->
