@@ -33,7 +33,7 @@ isString = (f) -> typeof f is "string" or f instanceof String
 testCode = readFileSync("./test/test.html.coffee")
 testCode = testCode.toString() if testCode
 die "No test code could be obtained!" unless testCode? and testCode and /./.test(testCode)
-stripCode = (c) -> c.replace(/(\n|.)*\nhtmlcup[.]/, "htmlpup.")
+stripCode = (c) -> c.replace(/(\n|.)*\nhtmlcup[.]/, "htmlcup.")
 testCode = stripCode testCode
 
 # No actual minification at the moment, just print code
