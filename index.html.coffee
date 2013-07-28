@@ -159,7 +159,7 @@ htmlcup.html5Page ->
         document.title = headTitle ? "@htmlcup"
         innerDocument.getElementsByTagName("body")[0].innerHTML = body
       sourcePane.onchange = update
-      sourcePane.onkeyup = -> update(); false
+      sourcePane.oninput = -> update(); false
 
       do update
       
