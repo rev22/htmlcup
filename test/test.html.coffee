@@ -18,11 +18,11 @@
 { htmlcup } = require '../htmlcup'
 
 title = "Test page for htmlcup library"
-version = "0.2.1"
+version = "0.2.3"
 
 htmlcup.html5Page ->
   @head ->
-    @title title
+    @title "My sweet page"
     @style type: "text/css",
       """
       body { background:pink }
