@@ -18,7 +18,7 @@
 { htmlcup } = require '../htmlcup'
 
 title = "Test page for htmlcup library"
-version = "0.2.3"
+version = "0.2.4"
 
 htmlcup.html5Page ->
   @head ->
@@ -35,4 +35,4 @@ htmlcup.html5Page ->
       @li ->
         @a href: 'http://recipe.com/marzipan', 'Marzipan'
     @h2 "Loops: print cubes of numbers from 1 to 150"
-    @span "#{x*x*x}" for x in [1..150]
+    @span "#{x*x*x} " for x in [1..150]
