@@ -1,11 +1,11 @@
 htmlcup
 =======
 
+```htmlcup``` is an HTML5 code generator.
+
 Usage is intuitive, if you already use CoffeeScript and know HTML:
 
 ````coffeescript
-{ htmlcup } = require './htmlcup'
-
 htmlcup.html5Page ->
   @head ->
     @title 'My sweet test page'
