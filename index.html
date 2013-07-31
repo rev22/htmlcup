@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html><head><title>Loading: @htmlcup</title><script type="text/javascript">(function () {
-        var timeout;
-        timeout = function() {
-          var x;
-          x = document.createElement("div");
-          x.id = "loadmsg";
-          x.innerHTML = "Loading... <a href=\"?\">Reload</a>";
-          return document.body.insertBefore(x, document.body.firstChild);
-        };
-        return window.htmlcupProtoLoadTimeout = setTimeout(timeout, 2000);
-      })();
+    var timeout;
+    timeout = function() {
+      var x;
+      x = document.createElement("div");
+      x.id = "loadmsg";
+      x.innerHTML = "Loading... <a href=\"?\">Reload</a>";
+      return document.body.insertBefore(x, document.body.firstChild);
+    };
+    return window.htmlcupProtoLoadTimeout = setTimeout(timeout, 2000);
+  })();
 </script><style type="text/css">body, .fullpage, .reset { margin:0;padding:0;border:0 }
 .fullpage { width:100%; height:100%; }
-#sourcepane {
+#sourcepaneCnt {
   opacity:0.2;
 }
-#sourcepane:hover {
+#sourcepaneCnt:hover {
   opacity:0.88;
-}</style></head><body><div class="fullpage"><iframe class="fullpage" style="position:absolute"></iframe><textarea id="sourcepane" style="width:60%;
+}
+.sourcepaneTextarea {
+  /* border:0; padding:0; */
+  width:100%;
+  height:100%;
+}</style></head><body><div class="fullpage"><iframe class="fullpage" style="position:absolute"></iframe><div id="sourcepaneCnt" style="width:60%;
 height:60%;
 top:20%;
 left:20%;
 position:absolute;
-z-index:1000000;">htmlcup.html5Page ->
+z-index:100;"><textarea id="sourcepane" class="sourcepaneTextarea aceTransform">htmlcup.html5Page ->
   @head ->
     @title "My sweet page"
     @style type: "text/css",
@@ -38,112 +43,215 @@ z-index:1000000;">htmlcup.html5Page ->
         @a href: 'http://recipe.com/marzipan', 'Marzipan'
     @h2 "Loops: print cubes of numbers from 1 to 150"
     @span "#{x*x*x} " for x in [1..150]
-</textarea></div><script type="text/javascript" src="http://js2coffee.org/scripts/coffeescript.min.js"></script><script type="text/javascript" src="htmlcup.js"></script><script type="text/javascript">(function () {
-        var clearLoadTimeout, rmTag, sourcePane, update;
-        rmTag = function(x) {
-          return x.parentNode.removeChild(x);
-        };
-        htmlcup = htmlcup.extendObject({
-          originalLib: htmlcup,
-          capturedTokens: [],
-          printHtml: function(t) {
-            return this.capturedTokens.push(t);
-          },
-          captureHtml: function(f) {
-            var o, p, r;
-            o = this.capturedTokens;
-            this.capturedTokens = [];
-            f.apply(this);
-            p = this.capturedTokens;
-            this.capturedTokens = o;
-            r = p.join("");
-            this.printHtml(r);
-            return r;
-          },
-          stripOuter: function(x) {
-            return x.replace(/^<[^>]*>/, "").replace(/^<[^>]*>$/, "");
-          },
-          capturedParts: {},
-          capturePart: function(tagName, stripOuter) {
-            if (stripOuter == null) {
-              stripOuter = this.stripOuter;
-            }
-            return function() {
-              var x;
-              x = arguments;
-              return this.capturedParts[tagName] = stripOuter(this.captureHtml(function() {
-                return this.originalLib[tagName].apply(this, x);
-              }));
-            };
-          },
-          body: function() {
-            return (this.capturePart("body")).apply(this, arguments);
-          },
-          head: function() {
-            var lib, r;
-            lib = this.extendObject({
-              title: function() {
-                return (this.capturePart("title")).apply(this, arguments);
-              },
-              headStyles: [],
-              style: function() {
-                return this.headStyles.push((this.capturePart("style")).apply(this, arguments));
+</textarea></div></div><script type="text/javascript" src="http://js2coffee.org/scripts/coffeescript.min.js"></script><script type="text/javascript" src="htmlcup.js"></script><script type="text/javascript">(function () {
+    var clearLoadTimeout, delayUpdates, jsload, log, rmTag, sourcePane, update, updateSource, upgradeTextareas;
+    rmTag = function(x) {
+      return x.parentNode.removeChild(x);
+    };
+    log = function(x) {
+      return console.log(x);
+    };
+    delayUpdates = function(minDelay, maxDelay) {
+      return (function(minTimeout, maxTimeout) {
+        return function(thunk) {
+          return function() {
+            var run;
+            run = function() {
+              if (minTimeout) {
+                clearInterval(minTimeout);
               }
-            });
-            r = (lib.capturePart("head")).apply(lib, arguments);
-            this.capturedParts.headStyles = lib.headStyles;
-            this.capturedParts.headTitle = lib.capturedParts.title;
-            return r;
+              if (maxTimeout) {
+                clearInterval(maxTimeout);
+              }
+              minTimeout = null;
+              maxTimeout = null;
+              return thunk();
+            };
+            if (minTimeout) {
+              clearInterval(minTimeout);
+            }
+            minTimeout = setTimeout(run, minDelay);
+            if (!maxTimeout) {
+              return maxTimeout = setTimeout(run, maxDelay);
+            }
+          };
+        };
+      })(null, null);
+    };
+    jsload = function(src, callback) {
+      var x, y;
+      log("Loading " + src);
+      x = document.createElement('script');
+      x.type = 'text/javascript';
+      x.src = src;
+      y = 1;
+      x.onload = x.onreadystatechange = function() {
+        if (y && !this.readyState || this.readyState === 'complete') {
+          log("Loaded " + src);
+          y = 0;
+          return callback();
+        }
+      };
+      return document.getElementsByTagName('head')[0].appendChild(x);
+    };
+    htmlcup = htmlcup.extendObject({
+      originalLib: htmlcup,
+      capturedTokens: [],
+      printHtml: function(t) {
+        return this.capturedTokens.push(t);
+      },
+      captureHtml: function(f) {
+        var o, p, r;
+        o = this.capturedTokens;
+        this.capturedTokens = [];
+        f.apply(this);
+        p = this.capturedTokens;
+        this.capturedTokens = o;
+        r = p.join("");
+        this.printHtml(r);
+        return r;
+      },
+      stripOuter: function(x) {
+        return x.replace(/^<[^>]*>/, "").replace(/^<[^>]*>$/, "");
+      },
+      capturedParts: {},
+      capturePart: function(tagName, stripOuter) {
+        if (stripOuter == null) {
+          stripOuter = this.stripOuter;
+        }
+        return function() {
+          var x;
+          x = arguments;
+          return this.capturedParts[tagName] = stripOuter(this.captureHtml(function() {
+            return this.originalLib[tagName].apply(this, x);
+          }));
+        };
+      },
+      body: function() {
+        return (this.capturePart("body")).apply(this, arguments);
+      },
+      head: function() {
+        var lib, r;
+        lib = this.extendObject({
+          title: function() {
+            return (this.capturePart("title")).apply(this, arguments);
           },
-          html5Page: function() {
-            var r, x;
-            x = arguments;
-            this.captureHtml(function() {
-              return this.originalLib.html5Page.apply(this, x);
-            });
-            r = this.capturedParts;
-            this.capturedParts = {};
-            return r;
+          headStyles: [],
+          style: function() {
+            return this.headStyles.push((this.capturePart("style")).apply(this, arguments));
           }
         });
-        sourcePane = document.getElementById("sourcepane");
-        update = function() {
-          var body, headStyles, headTitle, innerDocument, style, x, _i, _j, _len, _len1, _ref, _ref1;
-          _ref = CoffeeScript["eval"](sourcePane.value), body = _ref.body, headTitle = _ref.headTitle, headStyles = _ref.headStyles;
-          innerDocument = window.frames[0].window.document;
-          innerDocument.title = headTitle;
-          _ref1 = innerDocument.head.getElementsByTagName("style");
-          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-            x = _ref1[_i];
-            rmTag(x);
-          }
-          if (headStyles) {
-            for (_j = 0, _len1 = headStyles.length; _j < _len1; _j++) {
-              style = headStyles[_j];
-              x = innerDocument.createElement("style");
-              x.innerHTML = style;
-              innerDocument.getElementsByTagName("head")[0].appendChild(x);
-            }
-          }
-          document.title = headTitle != null ? headTitle : "@htmlcup";
-          return innerDocument.getElementsByTagName("body")[0].innerHTML = body;
+        r = (lib.capturePart("head")).apply(lib, arguments);
+        this.capturedParts.headStyles = lib.headStyles;
+        this.capturedParts.headTitle = lib.capturedParts.title;
+        return r;
+      },
+      html5Page: function() {
+        var r, x;
+        x = arguments;
+        this.captureHtml(function() {
+          return this.originalLib.html5Page.apply(this, x);
+        });
+        r = this.capturedParts;
+        this.capturedParts = {};
+        return r;
+      }
+    });
+    sourcePane = document.getElementById("sourcepane");
+    updateSource = function(source) {
+      var body, headStyles, headTitle, innerDocument, style, x, _i, _j, _len, _len1, _ref, _ref1;
+      _ref = CoffeeScript["eval"](source), body = _ref.body, headTitle = _ref.headTitle, headStyles = _ref.headStyles;
+      innerDocument = window.frames[0].window.document;
+      innerDocument.title = headTitle;
+      _ref1 = innerDocument.head.getElementsByTagName("style");
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        x = _ref1[_i];
+        rmTag(x);
+      }
+      if (headStyles) {
+        for (_j = 0, _len1 = headStyles.length; _j < _len1; _j++) {
+          style = headStyles[_j];
+          x = innerDocument.createElement("style");
+          x.innerHTML = style;
+          innerDocument.getElementsByTagName("head")[0].appendChild(x);
+        }
+      }
+      document.title = headTitle != null ? headTitle : "@htmlcup";
+      return innerDocument.getElementsByTagName("body")[0].innerHTML = body;
+    };
+    update = (delayUpdates(300, 2000))(function() {
+      return updateSource(sourcePane.value);
+    });
+    sourcePane.onchange = update;
+    sourcePane.oninput = function() {
+      update();
+      return false;
+    };
+    update();
+    clearLoadTimeout = function() {
+      var t;
+      if ((t = window.htmlcupProtoLoadTimeout) != null) {
+        window.clearTimeout(t);
+      }
+      delete window.htmlcupProtoLoadTimeout;
+      if (t = document.getElementById("loadmsg")) {
+        return rmTag(t);
+      }
+    };
+    clearLoadTimeout();
+    upgradeTextareas = function(areas, callback) {
+      var baseUrl, load;
+      baseUrl = "http://ajaxorg.github.com/ace-builds/textarea/src/";
+      if (!areas) {
+        areas = document.getElementsByClassName("aceTransform");
+      }
+      if (!areas) {
+        areas = document.getElementsByTagName("textarea");
+      }
+      if (!areas) {
+        return;
+      }
+      load = window.__ace_loader__ = function(path, module, callback) {
+        return jsload(baseUrl + path, function() {
+          return window.__ace_shadowed__.require([module], callback);
+        });
+      };
+      return load("ace-bookmarklet.js", "ace/ext/textarea", function() {
+        var Event, ace, area, transformed, _i, _len, _results;
+        ace = window.__ace_shadowed__;
+        ace.options = {
+          mode: "coffee",
+          theme: "cobalt",
+          gutter: "true",
+          fontSize: "10px",
+          softWrap: "off",
+          keybindings: "ace",
+          showPrintMargin: "true",
+          useSoftTabs: "true",
+          showInvisibles: "false"
         };
-        sourcePane.onchange = update;
-        sourcePane.oninput = function() {
-          update();
-          return false;
-        };
-        update();
-        clearLoadTimeout = function() {
-          var t;
-          if ((t = window.htmlcupProtoLoadTimeout) != null) {
-            window.clearTimeout(t);
-          }
-          delete window.htmlcupProtoLoadTimeout;
-          if (t = document.getElementById("loadmsg")) {
-            return rmTag(t);
-          }
-        };
-        return clearLoadTimeout();
-      })();
+        Event = ace.require("ace/lib/event");
+        transformed = [];
+        if (!callback) {
+          callback = (function() {});
+        }
+        _results = [];
+        for (_i = 0, _len = areas.length; _i < _len; _i++) {
+          area = areas[_i];
+          _results.push(callback(area, ace.transformTextarea(area, load)));
+        }
+        return _results;
+      });
+    };
+    return upgradeTextareas(null, function(plain, ace) {
+      update = (delayUpdates(300, 2000))(function() {
+        return updateSource(ace.getValue());
+      });
+      log("Upgrading textarea");
+      ace.on("change", update);
+      ace.on("blur", update);
+      ace.setTheme("ace/theme/eclipse");
+      return ace.getSession().setMode("ace/mode/coffee");
+    });
+  })();
 </script></body></html>
