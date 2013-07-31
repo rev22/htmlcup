@@ -6,8 +6,6 @@ htmlcup
 Usage is intuitive, if you already use CoffeeScript and know HTML:
 
 ````coffeescript
-{ htmlcup } = require './htmlcup'
-
 htmlcup.html5Page ->
   @head ->
     @title 'My sweet test page'
@@ -24,7 +22,7 @@ htmlcup.html5Page ->
         @a href: 'http://recipe.com/marzipan', 'Marzipan'
 ````
 
-This is similar in purpose to a templating engine, but more powerful as you have a full programming language in your hands, CoffeeScript.
+This is similar in purpose to a templating engine, but with the full power of a programming language in your hands, CoffeeScript.
 
 Extending the library
 =====================
