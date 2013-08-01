@@ -1,4 +1,9 @@
-all: index.html test/test.html test/extending-library.html
+TARGETS= test/test.html test/extending-library.html
+
+all: $(TARGETS)
+
+clean:
+	rm -f $(TARGETS)
 
 %.html: %.html.coffee
 	(sh -c "coffee $< >$@.new" && mv $@.new $@ && touch -r $< $@) || rm -f $@
