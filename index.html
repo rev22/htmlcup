@@ -23,12 +23,43 @@
   height:100%;
   background: black;
   color: white;
-}</style></head><body><div class="fullpage"><iframe class="fullpage" style="position:absolute"></iframe><div id="sourcepaneCnt" style="width:70%;
+}
+.invertBg {
+  color: white;
+  background: black;
+}
+.ribbonCnt {
+  overflow: hidden;
+  position: relative;
+}
+.ribbon, .ribbon a {
+  background: #037;
+  color: yellow;
+  font-weight: bold;
+  text-decoration: none;
+}
+.ribbon {
+  text-align:center;
+  transform: rotate(45deg);
+  right: -60px;
+  top: 30px;
+  width: 200px;
+  height: 20px;
+  font-size: 16px;
+  position: absolute;
+  -webkit-transform:  rotate(45deg);
+  -moz-transform:     rotate(45deg);
+  -ms-transform:      rotate(45deg);
+  -o-transform:       rotate(45deg);
+  transform:          rotate(45deg);
+  z-index: 1000000;
+}</style></head><body><div class="fullpage"><iframe class="fullpage" style="position:absolute"></iframe><div id="sourcepaneCnt" class="ribbonCnt" style="width:70%;
 height:70%;
 top:15%;
 right:15%;
 position:absolute;
-z-index:100;"><textarea id="sourcepane" class="sourcepaneTextarea aceTransform">htmlcup.html5Page ->
+z-index:100;"><div class="ribbon"><a href="https://github.com/rev22/htmlcup" style="font-family:monospace,fixed" title="htmlcup 0.2.0
+Visit homepage">@htmlcup</a></div><textarea id="sourcepane" class="reset sourcepaneTextarea aceTransform">htmlcup.html5Page ->
   @head ->
     @title "My sweet page"
     @style type: "text/css",
@@ -246,7 +277,7 @@ z-index:100;"><textarea id="sourcepane" class="sourcepaneTextarea aceTransform">
     };
     return upgradeTextareas(null, function(plain, ace) {
       update = (delayUpdates(300, 2000))(function() {
-        return updateSource(ace.getValue());
+        return updateSource((sourcePane.value = ace.getValue()));
       });
       log("Upgrading textarea");
       ace.on("change", update);
