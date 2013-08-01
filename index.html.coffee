@@ -223,6 +223,8 @@ htmlcup.html5Page ->
         /* border:0; padding:0; */
         width:100%;
         height:100%;
+        background: black;
+        color: white;
       }
       """
   @body ->
