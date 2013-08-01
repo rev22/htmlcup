@@ -220,7 +220,6 @@ htmlcup.html5Page ->
         opacity:0.88;
       }
       .sourcepaneTextarea {
-        /* border:0; padding:0; */
         width:100%;
         height:100%;
         background: black;
@@ -231,10 +230,10 @@ htmlcup.html5Page ->
     @div class: "fullpage", ->
       @iframe class: "fullpage", style: "position:absolute"
       @div id:"sourcepaneCnt", style: """
-        width:60%;
-        height:60%;
-        top:20%;
-        left:20%;
+        width:70%;
+        height:70%;
+        top:15%;
+        right:15%;
         position:absolute;
         z-index:100;
         """, ->
