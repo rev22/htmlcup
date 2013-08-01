@@ -198,7 +198,7 @@ pageCoffeeScript = ->
 
   upgradeTextareas null, (plain, ace) ->
     update = (delayUpdates 300, 2000) () ->
-        updateSource ace.getValue()
+        updateSource (sourcePane.value = ace.getValue())
     log "Upgrading textarea"
     ace.on("change",  update)
     ace.on("blur",    update)
