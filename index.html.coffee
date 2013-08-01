@@ -40,6 +40,7 @@ testCode = stripCode testCode
 minify = (f) ->
   if isString f then f else "(#{f.toString()})();\n"
 
+htmlcupOrig = htmlcup
 htmlcup = htmlcup.extendObject
   cssStyle: (x) -> @style type: 'text/css', x
   javaScript: (s) ->
@@ -225,11 +226,41 @@ htmlcup.html5Page ->
         background: black;
         color: white;
       }
+      .invertBg {
+        color: white;
+        background: black;
+      }
+      .ribbonCnt {
+        overflow: hidden;
+        position: relative;
+      }
+      .ribbon, .ribbon a {
+        background: #037;
+        color: yellow;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      .ribbon {
+        text-align:center;
+        transform: rotate(45deg);
+        right: -60px;
+        top: 30px;
+        width: 200px;
+        height: 20px;
+        font-size: 16px;
+        position: absolute;
+        -webkit-transform:  rotate(45deg);
+        -moz-transform:     rotate(45deg);
+        -ms-transform:      rotate(45deg);
+        -o-transform:       rotate(45deg);
+        transform:          rotate(45deg);
+        z-index: 1000000;
+      }
       """
   @body ->
     @div class: "fullpage", ->
       @iframe class: "fullpage", style: "position:absolute"
-      @div id:"sourcepaneCnt", style: """
+      @div id:"sourcepaneCnt", class:"ribbonCnt", style: """
         width:70%;
         height:70%;
         top:15%;
@@ -237,7 +268,13 @@ htmlcup.html5Page ->
         position:absolute;
         z-index:100;
         """, ->
-          @textarea id:"sourcepane", class:"sourcepaneTextarea aceTransform", testCode
+          @div class:"ribbon", ->
+            @a
+              href:"https://github.com/rev22/htmlcup",
+              style:"font-family:monospace,fixed",
+              title:"#{htmlcupOrig.libraryName} #{htmlcupOrig.libraryVersion}\nVisit homepage"
+              "@htmlcup"
+          @textarea id:"sourcepane", class:"reset sourcepaneTextarea aceTransform", testCode
         # """
         # htmlcup.html5Page ->
         #   @head ->
