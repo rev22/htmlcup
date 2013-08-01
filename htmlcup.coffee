@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-# Version: 0.1.0
+version = "0.2.0"
   
 # Copyright (c) 2013 Michele Bini
 
@@ -16,19 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
   
-object =
-  extendObject: (fields) ->
-    o = { }
-    o[n] = v for n,v of @
-    o[n] = v for n,v of fields
-    o
-
 list2set = (l) ->
   r = { }
   r[x] = 1 for x in l
   r
 
-lib = object.extendObject
+lib =
+  libraryName: "htmlcup"
+  libraryVersion: version
+  extendObject: (fields) ->
+    o = { }
+    o[n] = v for n,v of @
+    o[n] = v for n,v of fields
+    o
   printHtml: (t) -> process.stdout.write t
   quoteTagText: (str) ->
     str.replace /[&<]/g, (c) ->
