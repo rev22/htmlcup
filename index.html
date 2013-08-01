@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head><title>Loading: @htmlcup</title><script type="text/javascript">(function () {
+<html><head><title>@htmlcup</title><script type="text/javascript">(function () {
     var timeout;
     timeout = function() {
       var x;
@@ -112,7 +112,7 @@ z-index:100;"><textarea id="sourcepane" class="sourcepaneTextarea aceTransform">
         return r;
       },
       stripOuter: function(x) {
-        return x.replace(/^<[^>]*>/, "").replace(/^<[^>]*>$/, "");
+        return x.replace(/^<[^>]*>/, "").replace(/<[^>]*>$/, "");
       },
       capturedParts: {},
       capturePart: function(tagName, stripOuter) {
@@ -250,7 +250,7 @@ z-index:100;"><textarea id="sourcepane" class="sourcepaneTextarea aceTransform">
       log("Upgrading textarea");
       ace.on("change", update);
       ace.on("blur", update);
-      ace.setTheme("ace/theme/eclipse");
+      ace.setTheme("ace/theme/cobalt");
       return ace.getSession().setMode("ace/mode/coffee");
     });
   })();

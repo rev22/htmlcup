@@ -202,7 +202,7 @@ pageCoffeeScript = ->
     log "Upgrading textarea"
     ace.on("change",  update)
     ace.on("blur",    update)
-    ace.setTheme "ace/theme/eclipse"
+    ace.setTheme "ace/theme/cobalt"
     ace.getSession().setMode "ace/mode/coffee"
     
 
@@ -214,7 +214,7 @@ htmlcup.html5Page ->
       body, .fullpage, .reset { margin:0;padding:0;border:0 }
       .fullpage { width:100%; height:100%; }
       #sourcepaneCnt {
-        opacity:0.2;
+        opacity:0.22;
       }
       #sourcepaneCnt:hover {
         opacity:0.88;
