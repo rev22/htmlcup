@@ -107,7 +107,7 @@ pageCoffeeScript = ->
       r
 
     stripOuter: (x) ->
-      x.replace(/^<[^>]*>/, "").replace(/^<[^>]*>$/, "")
+      x.replace(/^<[^>]*>/, "").replace(/<[^>]*>$/, "")
     capturedParts: {}
     capturePart: (tagName, stripOuter = @stripOuter) -> ->
       x = arguments
@@ -208,7 +208,7 @@ pageCoffeeScript = ->
 
 htmlcup.html5Page ->
   @head ->
-    @title "Loading: #{title}"
+    @title "#{title}"
     @coffeeScript headCoffeeScript
     @cssStyle """
       body, .fullpage, .reset { margin:0;padding:0;border:0 }
