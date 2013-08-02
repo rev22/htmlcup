@@ -3,7 +3,7 @@
   var lib, list2set, version,
     __slice = [].slice;
 
-  version = "0.2.0";
+  version = "1.0.0";
 
   list2set = function(l) {
     var r, x, _i, _len;
@@ -17,7 +17,7 @@
 
   lib = {
     libraryName: "htmlcup",
-    libraryVersion: version,
+    libraryVersion: "0.2.0",
     extendObject: function(fields) {
       var n, o, v;
       o = {};
@@ -120,6 +120,73 @@
   };
 
   lib = lib.compileLib();
+
+  lib = lib.extendObject({
+    libraryVersion: version,
+    cssStyle: function(x) {
+      return this.style({
+        type: 'text/css'
+      }, x);
+    },
+    javaScript: function(x) {
+      return this.script({
+        type: "text/javascript"
+      }, x.replace("</", "<\/"));
+    },
+    coffeeScript: function(x) {
+      var codeToString, isString;
+      isString = function(x) {
+        return typeof x === "string" || x instanceof String;
+      };
+      codeToString = function(x) {
+        var cs;
+        if (isString(x)) {
+          cs = require("coffee-script");
+          return cs.compile(x);
+        } else {
+          return "(" + (x.toString()) + ")();\n";
+        }
+      };
+      return this.javaScript(codeToString(x));
+    },
+    cssStyleSource: function(s) {
+      return this.style({
+        type: "text/css",
+        src: s
+      });
+    },
+    javaScriptSource: function(s) {
+      return this.script({
+        type: "text/javascript",
+        src: s
+      });
+    },
+    coffeeScriptSource: function(s) {
+      return this.script({
+        type: "text/coffeescript",
+        src: s
+      });
+    },
+    embedCoffeeScriptSource: function(f) {
+      var fs;
+      fs = require("fs");
+      return this.coffeeScript((fs.readFileSync(f)).toString());
+    },
+    embedJavaScriptSource: function(f) {
+      var fs;
+      fs = require("fs");
+      return this.javaScript((fs.readFileSync(f)).toString());
+    },
+    embedScriptSource: function(f) {
+      var fs;
+      fs = require("fs");
+      if (/\.coffee$/.test(f)) {
+        return this.embedCoffeeScriptSource(f);
+      } else {
+        return this.embedJavaScriptSource(f);
+      }
+    }
+  });
 
   (typeof exports !== "undefined" && exports !== null ? exports : window).htmlcup = lib;
 

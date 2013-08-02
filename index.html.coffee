@@ -28,29 +28,18 @@ exit = process.exit
 die = (msg) -> warn msg; exit 1
 
 { readFileSync } = require 'fs'
-isString = (f) -> typeof f is "string" or f instanceof String
 
-testCode = readFileSync("./test/test.html.coffee")
+testCode = readFileSync("./test/primer.html.coffee")
 testCode = testCode.toString() if testCode
 die "No test code could be obtained!" unless testCode? and testCode and /./.test(testCode)
-stripCode = (c) -> c.replace(/(\n|.)*\nhtmlcup[.]/, "htmlcup.")
-testCode = stripCode testCode
+adaptCode = (c) ->
+  """
+  #
+  # Try <htmlcup> in real-time here!
+  #
 
-# No actual minification at the moment, just print code
-minify = (f) ->
-  if isString f then f else "(#{f.toString()})();\n"
-
-htmlcupOrig = htmlcup
-htmlcup = htmlcup.extendObject
-  cssStyle: (x) -> @style type: 'text/css', x
-  javaScript: (s) ->
-    @script type: "text/javascript", (s.replace("</", "<\/"))
-  javaScriptSource: (s) ->
-    @script type: "text/javascript", src: s
-  #coffeeScriptSource: (s) ->
-  #  @script type: "text/coffeescript", src: s
-  coffeeScript: (f) ->
-    @javaScript minify(f)
+  """ + c.replace(/(\n|.)*\nhtmlcup[.]/, "htmlcup.")
+testCode = adaptCode testCode
 
 headCoffeeScript = ->
   # Display a 'Loading...' message when loading is taking long
@@ -127,6 +116,9 @@ pageCoffeeScript = ->
       @capturedParts.headStyles = lib.headStyles
       @capturedParts.headTitle = lib.capturedParts.title
       r
+    # script: ->
+    #  scripts = (@capturedParts.scripts or= [])
+    #  push scripts, ((@capturePart "script").apply @, arguments)
     html5Page: () ->
       x = arguments
       @captureHtml -> @originalLib.html5Page.apply @, x
@@ -135,18 +127,33 @@ pageCoffeeScript = ->
       r
 
   sourcePane = document.getElementById("sourcepane")
+  messagePane = document.getElementById("messagepane")
+  timerManager = null
   updateSource = (source) ->
-    { body, headTitle, headStyles } = CoffeeScript.eval(source)
-    innerDocument = window.frames[0].window.document
-    innerDocument.title = headTitle
-    rmTag x for x in innerDocument.head.getElementsByTagName "style"
-    if headStyles
-      for style in headStyles
-        x = innerDocument.createElement "style"
-        x.innerHTML = style
-        innerDocument.getElementsByTagName("head")[0].appendChild x
-    document.title = headTitle ? "@htmlcup"
-    innerDocument.getElementsByTagName("body")[0].innerHTML = body
+    try
+      timerManager.clearAll() if timerManager
+      { body, headTitle, headStyles } = CoffeeScript.eval(source)
+      innerWindow = window.frames[0].window
+      timerManager = timerman(innerWindow) unless timerManager
+      innerDocument = innerWindow.document
+      innerDocument.title = headTitle
+      rmTag x for x in innerDocument.head.getElementsByTagName "style"
+      if headStyles
+        for style in headStyles
+          x = innerDocument.createElement "style"
+          x.innerHTML = style
+          innerDocument.getElementsByTagName("head")[0].appendChild x
+      document.title = headTitle ? "@htmlcup"
+      innerDocument.getElementsByTagName("body")[0].innerHTML = body
+      # Now run scripts
+      for script in innerDocument.getElementsByTagName "script"
+        innerWindow.eval (script.value ? script.innerHTML)
+      messagePane.innerHTML = ""
+    catch error
+      messagePane.innerHTML =
+        "<div class=error>#{
+          htmlcup.quoteText error.toString()}</div>"
+        
   update = (delayUpdates 300, 2000) () ->
     updateSource sourcePane.value
   sourcePane.onchange = update
@@ -205,10 +212,12 @@ pageCoffeeScript = ->
     ace.on("blur",    update)
     ace.setTheme "ace/theme/cobalt"
     ace.getSession().setMode "ace/mode/coffee"
+    ace.getSession().setTabSize 2
     
 
 htmlcup.html5Page ->
   @head ->
+    @meta charset:"utf-8"
     @title "#{title}"
     @coffeeScript headCoffeeScript
     @cssStyle """
@@ -230,6 +239,7 @@ htmlcup.html5Page ->
         color: white;
         background: black;
       }
+      .messagePane { width:60%;height:20%;position:absolute;z-index:10000 }
       .ribbonCnt {
         overflow: hidden;
         position: relative;
@@ -259,6 +269,7 @@ htmlcup.html5Page ->
       """
   @body ->
     @div class: "fullpage", ->
+      @div class:"messagePane", id:"messagepane"
       @iframe class: "fullpage", style: "position:absolute"
       @div id:"sourcepaneCnt", class:"ribbonCnt", style: """
         width:70%;
@@ -272,7 +283,7 @@ htmlcup.html5Page ->
             @a
               href:"https://github.com/rev22/htmlcup",
               style:"font-family:monospace,fixed",
-              title:"#{htmlcupOrig.libraryName} #{htmlcupOrig.libraryVersion}\nVisit homepage"
+              title:"#{htmlcup.libraryName} #{htmlcup.libraryVersion}\nVisit homepage"
               "@htmlcup"
           @textarea id:"sourcepane", class:"reset sourcepaneTextarea aceTransform", testCode
         # """
@@ -292,4 +303,5 @@ htmlcup.html5Page ->
         #     """
     @javaScriptSource "http://js2coffee.org/scripts/coffeescript.min.js"
     @javaScriptSource "htmlcup.js"
+    @embedScriptSource "vendor/rev22/timerman/timerman.coffee"
     @coffeeScript pageCoffeeScript

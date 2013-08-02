@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head><title>@htmlcup</title><script type="text/javascript">(function () {
+<html><head><meta charset="utf-8"><title>@htmlcup</title><script type="text/javascript">(function () {
     var timeout;
     timeout = function() {
       var x;
@@ -28,6 +28,7 @@
   color: white;
   background: black;
 }
+.messagePane { width:60%;height:20%;position:absolute;z-index:10000 }
 .ribbonCnt {
   overflow: hidden;
   position: relative;
@@ -53,30 +54,138 @@
   -o-transform:       rotate(45deg);
   transform:          rotate(45deg);
   z-index: 1000000;
-}</style></head><body><div class="fullpage"><iframe class="fullpage" style="position:absolute"></iframe><div id="sourcepaneCnt" class="ribbonCnt" style="width:70%;
+}</style></head><body><div class="fullpage"><div class="messagePane" id="messagepane"></div><iframe class="fullpage" style="position:absolute"></iframe><div id="sourcepaneCnt" class="ribbonCnt" style="width:70%;
 height:70%;
 top:15%;
 right:15%;
 position:absolute;
-z-index:100;"><div class="ribbon"><a href="https://github.com/rev22/htmlcup" style="font-family:monospace,fixed" title="htmlcup 0.2.0
-Visit homepage">@htmlcup</a></div><textarea id="sourcepane" class="reset sourcepaneTextarea aceTransform">htmlcup.html5Page ->
+z-index:100;"><div class="ribbon"><a href="https://github.com/rev22/htmlcup" style="font-family:monospace,fixed" title="htmlcup 1.0.0
+Visit homepage">@htmlcup</a></div><textarea id="sourcepane" class="reset sourcepaneTextarea aceTransform">#
+# Try &lt;htmlcup> in real-time here!
+#
+htmlcup.html5Page ->
   @head ->
-    @title "My sweet page"
-    @style type: "text/css",
-      """
-      body { background:pink }
-      """
+    @title "hmlcup, caffeinated HTML"
+    @cssStyle "body { background:cyan; font-size:18px; }"
   @body ->
-    @p 'Cupcake ipsum dolor. Sit amet I love sugar plum.'
-    # And now a list
-    @ol ->
-      @li "Sweet jelly fruitcake"
-      @li ->
-        @a href: 'http://recipe.com/marzipan', 'Marzipan'
-    @h2 "Loops: print cubes of numbers from 1 to 150"
-    @span "#{x*x*x} " for x in [1..150]
-</textarea></div></div><script type="text/javascript" src="http://js2coffee.org/scripts/coffeescript.min.js"></script><script type="text/javascript" src="htmlcup.js"></script><script type="text/javascript">(function () {
-    var clearLoadTimeout, delayUpdates, jsload, log, rmTag, sourcePane, update, updateSource, upgradeTextareas;
+    @h2 "@htmlcup - Generate HTML5 with CoffeeScript"
+    @p "htmlcup has CoffeeScript's convenience and power, and is readily extensible"
+    @h4 "Find more about:"
+    @ul ->
+      @li -> @a href:'http://github.com/rev22/htmlcup',  "htmlcup"
+      @li -> @a href:'http://coffeescript.org',          "CoffeeScript"
+    @h4 "Loops: print cubes of numbers from 1 to 10"
+    @span title:"Cube of #{x}", "#{x*x*x} " for x in [1..10]
+    @h4 "Scripting: simple clock"
+    @p id:"timer", onclick:"javascript:this.innerHTML=0"
+    @coffeeScript ->
+      updateTimer = do (c = 0) -> ->
+        document.getElementById("timer").innerHTML =
+          "#{("｜／—＼")[c=(c+1)%4]} #{new Date}"
+      setInterval updateTimer, 125
+</textarea></div></div><script type="text/javascript" src="http://js2coffee.org/scripts/coffeescript.min.js"></script><script type="text/javascript" src="htmlcup.js"></script><script type="text/javascript">(function() {
+
+  window.timerman = function(win) {
+    var clearInterval, clearTimeout, intervals, lib, setInterval, setTimeout, timeouts;
+    if (win == null) {
+      win = window;
+    }
+    setTimeout = win.setTimeout, setInterval = win.setInterval, clearInterval = win.clearInterval, clearTimeout = win.clearTimeout;
+    intervals = {};
+    timeouts = {};
+    lib = {
+      setTimeout: function(code, delay) {
+        var id;
+        id = setTimeout((function() {
+          delete timeouts[id];
+          return code();
+        }), delay);
+        timeouts[id] = code;
+        return id;
+      },
+      clearTimeout: function(id) {
+        var x;
+        x = clearTimeout(id);
+        delete timeouts[id];
+        return x;
+      },
+      setInterval: function(code, delay) {
+        var id;
+        id = setInterval((function() {
+          try {
+            return code();
+          } catch (error) {
+            lib.clearInterval(id);
+            throw error;
+          }
+        }), delay);
+        intervals[id] = code;
+        return id;
+      },
+      clearInterval: function(id) {
+        var x;
+        x = clearTimeout(id);
+        delete timeouts[id];
+        return x;
+      },
+      clearAllTimeouts: function() {
+        var x, _results;
+        _results = [];
+        for (x in timeouts) {
+          _results.push(lib.clearTimeout(x));
+        }
+        return _results;
+      },
+      clearAllIntervals: function() {
+        var x, _results;
+        _results = [];
+        for (x in intervals) {
+          _results.push(lib.clearInterval(x));
+        }
+        return _results;
+      },
+      clearAll: function() {
+        lib.clearAllTimeouts();
+        return lib.clearAllIntervals();
+      },
+      intervals: intervals,
+      timeouts: timeouts,
+      original: {
+        setTimeout: setTimeout,
+        setInterval: setInterval,
+        clearInterval: clearInterval,
+        clearTimeout: clearTimeout
+      },
+      install: function(w) {
+        var x, _results;
+        if (w == null) {
+          w = win;
+        }
+        _results = [];
+        for (x in lib.original) {
+          _results.push(w[x] = lib[x]);
+        }
+        return _results;
+      },
+      uninstall: function(w) {
+        var x, _results;
+        if (w == null) {
+          w = win;
+        }
+        _results = [];
+        for (x in lib.original) {
+          _results.push(w[x] = lib.original[x]);
+        }
+        return _results;
+      }
+    };
+    lib.install();
+    return lib;
+  };
+
+}).call(this);
+</script><script type="text/javascript">(function () {
+    var clearLoadTimeout, delayUpdates, jsload, log, messagePane, rmTag, sourcePane, timerManager, update, updateSource, upgradeTextareas;
     rmTag = function(x) {
       return x.parentNode.removeChild(x);
     };
@@ -190,26 +299,45 @@ Visit homepage">@htmlcup</a></div><textarea id="sourcepane" class="reset sourcep
       }
     });
     sourcePane = document.getElementById("sourcepane");
+    messagePane = document.getElementById("messagepane");
+    timerManager = null;
     updateSource = function(source) {
-      var body, headStyles, headTitle, innerDocument, style, x, _i, _j, _len, _len1, _ref, _ref1;
-      _ref = CoffeeScript["eval"](source), body = _ref.body, headTitle = _ref.headTitle, headStyles = _ref.headStyles;
-      innerDocument = window.frames[0].window.document;
-      innerDocument.title = headTitle;
-      _ref1 = innerDocument.head.getElementsByTagName("style");
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        x = _ref1[_i];
-        rmTag(x);
-      }
-      if (headStyles) {
-        for (_j = 0, _len1 = headStyles.length; _j < _len1; _j++) {
-          style = headStyles[_j];
-          x = innerDocument.createElement("style");
-          x.innerHTML = style;
-          innerDocument.getElementsByTagName("head")[0].appendChild(x);
+      var body, headStyles, headTitle, innerDocument, innerWindow, script, style, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _ref3;
+      try {
+        if (timerManager) {
+          timerManager.clearAll();
         }
+        _ref = CoffeeScript["eval"](source), body = _ref.body, headTitle = _ref.headTitle, headStyles = _ref.headStyles;
+        innerWindow = window.frames[0].window;
+        if (!timerManager) {
+          timerManager = timerman(innerWindow);
+        }
+        innerDocument = innerWindow.document;
+        innerDocument.title = headTitle;
+        _ref1 = innerDocument.head.getElementsByTagName("style");
+        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+          x = _ref1[_i];
+          rmTag(x);
+        }
+        if (headStyles) {
+          for (_j = 0, _len1 = headStyles.length; _j < _len1; _j++) {
+            style = headStyles[_j];
+            x = innerDocument.createElement("style");
+            x.innerHTML = style;
+            innerDocument.getElementsByTagName("head")[0].appendChild(x);
+          }
+        }
+        document.title = headTitle != null ? headTitle : "@htmlcup";
+        innerDocument.getElementsByTagName("body")[0].innerHTML = body;
+        _ref2 = innerDocument.getElementsByTagName("script");
+        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+          script = _ref2[_k];
+          innerWindow["eval"]((_ref3 = script.value) != null ? _ref3 : script.innerHTML);
+        }
+        return messagePane.innerHTML = "";
+      } catch (error) {
+        return messagePane.innerHTML = "<div class=error>" + (htmlcup.quoteText(error.toString())) + "</div>";
       }
-      document.title = headTitle != null ? headTitle : "@htmlcup";
-      return innerDocument.getElementsByTagName("body")[0].innerHTML = body;
     };
     update = (delayUpdates(300, 2000))(function() {
       return updateSource(sourcePane.value);
@@ -283,7 +411,8 @@ Visit homepage">@htmlcup</a></div><textarea id="sourcepane" class="reset sourcep
       ace.on("change", update);
       ace.on("blur", update);
       ace.setTheme("ace/theme/cobalt");
-      return ace.getSession().setMode("ace/mode/coffee");
+      ace.getSession().setMode("ace/mode/coffee");
+      return ace.getSession().setTabSize(2);
     });
   })();
 </script></body></html>
