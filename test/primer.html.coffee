@@ -14,9 +14,9 @@ htmlcup.html5Page ->
     @h4 "Loops: print cubes of numbers from 1 to 10"
     @span title:"Cube of #{x}", "#{x*x*x} " for x in [1..10]
     @h4 "Scripting: simple clock"
-    @p id:"timer", onclick:"javascript:this.innerHTML=0"
+    @p id:"clock"
     @coffeeScript ->
-      updateTimer = do (c = 0) -> ->
-        document.getElementById("timer").innerHTML =
+      updateClock = do (c = 0) -> ->
+        document.getElementById("clock").innerHTML =
           "#{("｜／—＼")[c=(c+1)%4]} #{new Date}"
-      setInterval updateTimer, 125
+      setInterval updateClock, 125
