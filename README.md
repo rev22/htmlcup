@@ -24,7 +24,7 @@ htmlcup.html5Page ->
 
 This is similar in purpose to a templating engine, but with the full power of a programming language in your hands, CoffeeScript.
 
-You can try ```htmlcup''' here: http://rev22.github.io/htmlcup
+You can try ```htmlcup``` here: http://rev22.github.io/htmlcup
 
 Extending the library
 =====================
