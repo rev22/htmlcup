@@ -1,4 +1,4 @@
-TARGETS= test/test.html test/extending-library.html
+TARGETS= test/test.html test/extending-library.html test/primer.html
 
 all: $(TARGETS)
 
