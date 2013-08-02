@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "0.2.0"
+version = "1.0.0"
   
 # Copyright (c) 2013 Michele Bini
 
@@ -23,7 +23,7 @@ list2set = (l) ->
 
 lib =
   libraryName: "htmlcup"
-  libraryVersion: version
+  libraryVersion: "0.2.0"
   extendObject: (fields) ->
     o = { }
     o[n] = v for n,v of @
@@ -92,5 +92,33 @@ track, u, ul, var, video, wbr
     @html.apply @, args
 
 lib = lib.compileLib()
+
+lib = lib.extendObject
+  libraryVersion: version
+  cssStyle:    (x) -> @style type: 'text/css', x
+  javaScript:  (x) -> @script type: "text/javascript", (x.replace("</", "<\/"))
+  coffeeScript: (x) ->
+    isString = (x) -> typeof x is "string" or x instanceof String
+    codeToString = (x) ->
+      if isString x
+        cs = require "coffee-script"
+        cs.compile x
+      else "(#{x.toString()})();\n"
+    @javaScript codeToString(x)
+  cssStyleSource:      (s) -> @style   type: "text/css",           src: s
+  javaScriptSource:    (s) -> @script  type: "text/javascript",    src: s
+  coffeeScriptSource:  (s) -> @script  type: "text/coffeescript",  src: s
+  embedCoffeeScriptSource: (f) ->
+    fs = require "fs"
+    @coffeeScript (fs.readFileSync(f)).toString()
+  embedJavaScriptSource: (f) ->
+    fs = require "fs"
+    @javaScript (fs.readFileSync(f)).toString()
+  embedScriptSource: (f) ->
+    fs = require "fs"
+    if /\.coffee$/.test(f)
+      @embedCoffeeScriptSource f
+    else
+      @embedJavaScriptSource f
 
 (exports ? window).htmlcup = lib
