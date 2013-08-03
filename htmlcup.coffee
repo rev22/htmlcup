@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.0.0"
+version = "1.1.0-1"
   
 # Copyright (c) 2013 Michele Bini
 
@@ -120,5 +120,10 @@ lib = lib.extendObject
       @embedCoffeeScriptSource f
     else
       @embedJavaScriptSource f
+  embedFavicon: (f = "favicon.ico") ->
+    fs = require "fs"
+    icon = fs.readFileSync(f).toString('base64')
+    icon = "data:image/x-icon;base64,#{icon}"
+    @link rel:"shortcut icon", href:icon
 
 (exports ? window).htmlcup = lib
