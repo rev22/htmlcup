@@ -196,15 +196,48 @@ pageCoffeeScript = ->
         useSoftTabs:      "true"
         showInvisibles:   "false"
 
-      Event = ace.require "ace/lib/event"
-      
-      transformed = []
+      require = ace.require
 
-      callback = (->) unless callback
+      require ["ace/layer/text"], ({Text}) ->
+
+        orig = Text.prototype.$renderToken
+
+        patched = do (
+          rgx = new RegExp "[a-z][0-9]*[A-Z]", "g"
+        ) -> (builder, col, token, value) ->
+          if match = rgx.exec value
+            type = token.type
+            type_c = type + ".camel"
+            p = 0
+            loop
+              console.log match
+              console.log rgx.lastIndex
+              q = rgx.lastIndex - 1
+              s = value.substring(p, q)
+              col = orig.call @, builder, col, { type, value: s }, s
+              s = value.substring(q, p = q + 1)
+              col = orig.call @, builder, col, { type: type_c, value: s }, s
+              break unless match = rgx.exec value
+            s = value.substring(p)
+            orig.call @, builder, col, { type, value: s }, s            
+          else
+            orig.apply @, arguments
+
+        Text.prototype.$renderToken = patched
+
+        x = document.createElement "style"
+        x.innerHTML = ".ace_camel { font-weight: bold; }"
+        document.head.appendChild x
+
+        # Event = ace.require "ace/lib/event"
+      
+        transformed = []
+
+        callback = (->) unless callback
                   
-      for area in areas
-        # Event.addListener area, "click", (e) ->
-        callback area, ace.transformTextarea(area, load) #  if e.detail is 3
+        for area in areas
+          # Event.addListener area, "click", (e) ->
+          callback area, ace.transformTextarea(area, load) #  if e.detail is 3
 
   upgradeTextareas null, (plain, ace) ->
     update = (delayUpdates 300, 2000) () ->
