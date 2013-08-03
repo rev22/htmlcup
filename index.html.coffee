@@ -210,7 +210,7 @@ pageCoffeeScript = ->
     log "Upgrading textarea"
     ace.on("change",  update)
     ace.on("blur",    update)
-    ace.setTheme "ace/theme/cobalt"
+    ace.setTheme "ace/theme/vibrant_ink"
     ace.getSession().setMode "ace/mode/coffee"
     ace.getSession().setTabSize 2
     
