@@ -240,7 +240,16 @@ htmlcup.html5Page ->
         color: white;
         background: black;
       }
-      .messagePane { width:60%;height:20%;position:absolute;z-index:10000 }
+      .messagePane {
+        width:60%;height:20%;position:absolute;z-index:10000;
+        text-align:center;
+        margin-left:20%;
+      }
+      .error {
+        color: yellow;
+        font-weight: bold;
+        background:#007;
+      }
       .ribbonCnt {
         overflow: hidden;
         position: relative;
