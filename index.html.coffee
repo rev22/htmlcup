@@ -218,6 +218,7 @@ pageCoffeeScript = ->
 htmlcup.html5Page ->
   @head ->
     @meta charset:"utf-8"
+    @embedFavicon "htmlcup.ico"
     @title "#{title}"
     @coffeeScript headCoffeeScript
     @cssStyle """

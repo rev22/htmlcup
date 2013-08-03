@@ -3,7 +3,7 @@
   var lib, list2set, version,
     __slice = [].slice;
 
-  version = "1.0.0";
+  version = "1.1.0-1";
 
   list2set = function(l) {
     var r, x, _i, _len;
@@ -185,6 +185,19 @@
       } else {
         return this.embedJavaScriptSource(f);
       }
+    },
+    embedFavicon: function(f) {
+      var fs, icon;
+      if (f == null) {
+        f = "favicon.ico";
+      }
+      fs = require("fs");
+      icon = fs.readFileSync(f).toString('base64');
+      icon = "data:image/x-icon;base64," + icon;
+      return this.link({
+        rel: "shortcut icon",
+        href: icon
+      });
     }
   });
 
