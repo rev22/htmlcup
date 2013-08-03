@@ -131,10 +131,12 @@ pageCoffeeScript = ->
   timerManager = null
   updateSource = (source) ->
     try
-      timerManager.clearAll() if timerManager
       { body, headTitle, headStyles } = CoffeeScript.eval(source)
       innerWindow = window.frames[0].window
-      timerManager = timerman(innerWindow) unless timerManager
+      if timerManager?
+        timerManager.clearAll()
+      else
+        timerManager = timerman(innerWindow)
       innerDocument = innerWindow.document
       innerDocument.title = headTitle
       rmTag x for x in innerDocument.head.getElementsByTagName "style"
