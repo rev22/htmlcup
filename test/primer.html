@@ -3,7 +3,7 @@
         var updateClock;
         updateClock = (function(c) {
           return function() {
-            return document.getElementById("clock").innerHTML = "" + "｜／—＼"[c = (c + 1) % 4] + " " + (new Date);
+            return document.getElementById("clock").innerHTML = "" + "｜／－＼"[c = (c + 1) % 4] + " " + (new Date);
           };
         })(0);
         return setInterval(updateClock, 125);

@@ -28,7 +28,16 @@
   color: white;
   background: black;
 }
-.messagePane { width:60%;height:20%;position:absolute;z-index:10000 }
+.messagePane {
+  width:60%;height:20%;position:absolute;z-index:10000;
+  text-align:center;
+  margin-left:20%;
+}
+.error {
+  color: yellow;
+  font-weight: bold;
+  background:#007;
+}
 .ribbonCnt {
   overflow: hidden;
   position: relative;
@@ -81,7 +90,7 @@ htmlcup.html5Page ->
     @coffeeScript ->
       updateClock = do (c = 0) -> ->
         document.getElementById("clock").innerHTML =
-          "#{("｜／—＼")[c=(c+1)%4]} #{new Date}"
+          "#{("｜／－＼")[c=(c+1)%4]} #{new Date}"
       setInterval updateClock, 125
 </textarea></div></div><script type="text/javascript" src="http://js2coffee.org/scripts/coffeescript.min.js"></script><script type="text/javascript" src="htmlcup.js"></script><script type="text/javascript">(function() {
 
@@ -304,12 +313,11 @@ htmlcup.html5Page ->
     updateSource = function(source) {
       var body, headStyles, headTitle, innerDocument, innerWindow, script, style, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _ref3;
       try {
-        if (timerManager) {
-          timerManager.clearAll();
-        }
         _ref = CoffeeScript["eval"](source), body = _ref.body, headTitle = _ref.headTitle, headStyles = _ref.headStyles;
         innerWindow = window.frames[0].window;
-        if (!timerManager) {
+        if (timerManager != null) {
+          timerManager.clearAll();
+        } else {
           timerManager = timerman(innerWindow);
         }
         innerDocument = innerWindow.document;
@@ -377,7 +385,7 @@ htmlcup.html5Page ->
         });
       };
       return load("ace-bookmarklet.js", "ace/ext/textarea", function() {
-        var Event, ace, area, transformed, _i, _len, _results;
+        var ace, require;
         ace = window.__ace_shadowed__;
         ace.options = {
           mode: "coffee",
@@ -390,17 +398,61 @@ htmlcup.html5Page ->
           useSoftTabs: "true",
           showInvisibles: "false"
         };
-        Event = ace.require("ace/lib/event");
-        transformed = [];
-        if (!callback) {
-          callback = (function() {});
-        }
-        _results = [];
-        for (_i = 0, _len = areas.length; _i < _len; _i++) {
-          area = areas[_i];
-          _results.push(callback(area, ace.transformTextarea(area, load)));
-        }
-        return _results;
+        require = ace.require;
+        return require(["ace/layer/text"], function(_arg) {
+          var Text, area, orig, patched, transformed, x, _i, _len, _results;
+          Text = _arg.Text;
+          orig = Text.prototype.$renderToken;
+          patched = (function(rgx) {
+            return function(builder, col, token, value) {
+              var match, p, q, s, type, type_c;
+              if (match = rgx.exec(value)) {
+                type = token.type;
+                type_c = type + ".camel";
+                p = 0;
+                while (true) {
+                  console.log(match);
+                  console.log(rgx.lastIndex);
+                  q = rgx.lastIndex - 1;
+                  s = value.substring(p, q);
+                  col = orig.call(this, builder, col, {
+                    type: type,
+                    value: s
+                  }, s);
+                  s = value.substring(q, p = q + 1);
+                  col = orig.call(this, builder, col, {
+                    type: type_c,
+                    value: s
+                  }, s);
+                  if (!(match = rgx.exec(value))) {
+                    break;
+                  }
+                }
+                s = value.substring(p);
+                return orig.call(this, builder, col, {
+                  type: type,
+                  value: s
+                }, s);
+              } else {
+                return orig.apply(this, arguments);
+              }
+            };
+          })(new RegExp("[a-z][0-9]*[A-Z]", "g"));
+          Text.prototype.$renderToken = patched;
+          x = document.createElement("style");
+          x.innerHTML = ".ace_camel { font-weight: bold; }";
+          document.head.appendChild(x);
+          transformed = [];
+          if (!callback) {
+            callback = (function() {});
+          }
+          _results = [];
+          for (_i = 0, _len = areas.length; _i < _len; _i++) {
+            area = areas[_i];
+            _results.push(callback(area, ace.transformTextarea(area, load)));
+          }
+          return _results;
+        });
       });
     };
     return upgradeTextareas(null, function(plain, ace) {
