@@ -18,5 +18,5 @@ htmlcup.html5Page ->
     @coffeeScript ->
       updateClock = do (c = 0) -> ->
         document.getElementById("clock").innerHTML =
-          "#{("｜／—＼")[c=(c+1)%4]} #{new Date}"
+          "#{("｜／－＼")[c=(c+1)%4]} #{new Date}"
       setInterval updateClock, 125
