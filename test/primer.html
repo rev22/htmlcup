@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html><head><title>hmlcup, caffeinated HTML</title><style type="text/css">body { background:cyan; font-size:18px; }</style></head><body><h2>@htmlcup - Generate HTML5 with CoffeeScript</h2><p>htmlcup has CoffeeScript's convenience and power, and is readily extensible</p><h4>Find more about:</h4><ul><li><a href="http://github.com/rev22/htmlcup">htmlcup</a></li><li><a href="http://coffeescript.org">CoffeeScript</a></li></ul><h4>Loops: print cubes of numbers from 1 to 10</h4><span title="Cube of 1">1 </span><span title="Cube of 2">8 </span><span title="Cube of 3">27 </span><span title="Cube of 4">64 </span><span title="Cube of 5">125 </span><span title="Cube of 6">216 </span><span title="Cube of 7">343 </span><span title="Cube of 8">512 </span><span title="Cube of 9">729 </span><span title="Cube of 10">1000 </span><h4>Scripting: simple clock</h4><p id="clock"></p><script type="text/javascript">(function () {
+        var updateClock;
+        updateClock = (function(c) {
+          return function() {
+            return document.getElementById("clock").innerHTML = "" + "｜／－＼"[c = (c + 1) % 4] + " " + (new Date);
+          };
+        })(0);
+        return setInterval(updateClock, 125);
+      })();
+</script></body></html>
