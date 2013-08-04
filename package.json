@@ -1,6 +1,6 @@
 {
     "name": "htmlcup",
-    "version": "1.1.0-pre.7",
+    "version": "1.1.0-pre.8",
     "description": "Generate HTML5 with CoffeeScript, instead of a templating engine.  Readily extensible library.",
     "keywords": [ "HTML", "CoffeeScript" ],
     "homepage": "http://github.com/rev22/htmlcup",
@@ -29,6 +29,6 @@
 	"type": "git",
 	"url": "http://github.com/rev22/htmlcup.git"
     },
-    "main": "htmlcup",
+    "main": "htmlcup.js",
     "license": "GPL3"
 }
