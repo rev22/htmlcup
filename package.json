@@ -6,6 +6,7 @@
     "homepage": "http://github.com/rev22/htmlcup",
     "bugs": { "url": "http://github.com/rev22/htmlcup/issues" },
     "files": [
+	"AUTHORS",
 	"COPYING",
 	"Makefile",
 	"README.md",
