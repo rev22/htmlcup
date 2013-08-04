@@ -1,6 +1,6 @@
 {
     "name": "htmlcup",
-    "version": "1.1.0-pre.5",
+    "version": "1.1.0-pre.6",
     "description": "Generate HTML5 with CoffeeScript, instead of a templating engine.  Readily extensible library.",
     "keywords": [ "HTML", "CoffeeScript" ],
     "homepage": "http://github.com/rev22/htmlcup",
@@ -10,7 +10,7 @@
 	"Makefile",
 	"README.md",
 	"htmlcup.coffee",
-	'lib/htmlcup.js',
+	"lib/htmlcup.js",
 	"test/MIT-LICENSE",
 	"test/extending-library.html",
 	"test/extending-library.html.coffee",
