@@ -1,4 +1,4 @@
-TARGETS= index.html test/test.html test/extending-library.html test/primer.html htmlcup.js
+TARGETS=htmlcup.js index.html test/test.html test/extending-library.html test/primer.html htmlcup.js
 
 all: $(TARGETS)
 

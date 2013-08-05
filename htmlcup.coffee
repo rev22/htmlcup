@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.1.0-1"
+version = "1.1.0-pre.7"
   
 # Copyright (c) 2013 Michele Bini
 
@@ -94,6 +94,7 @@ track, u, ul, var, video, wbr
 lib = lib.compileLib()
 
 lib = lib.extendObject
+  bareHtmlcup: lib
   libraryVersion: version
   cssStyle:    (x) -> @style type: 'text/css', x
   javaScript:  (x) -> @script type: "text/javascript", (x.replace("</", "<\/"))
