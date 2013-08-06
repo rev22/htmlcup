@@ -68,7 +68,7 @@ height:70%;
 top:15%;
 right:15%;
 position:absolute;
-z-index:100;"><div class="ribbon"><a href="https://github.com/rev22/htmlcup" style="font-family:monospace,fixed" title="htmlcup 1.1.0-1
+z-index:100;"><div class="ribbon"><a href="https://github.com/rev22/htmlcup" style="font-family:monospace,fixed" title="htmlcup 1.1.0-pre.7
 Visit homepage">@htmlcup</a></div><textarea id="sourcepane" class="reset sourcepaneTextarea aceTransform">#
 # Try &lt;htmlcup> in real-time here!
 #
@@ -93,7 +93,6 @@ htmlcup.html5Page ->
           "#{("｜／－＼")[c=(c+1)%4]} #{new Date}"
       setInterval updateClock, 125
 </textarea></div></div><script type="text/javascript" src="http://js2coffee.org/scripts/coffeescript.min.js"></script><script type="text/javascript" src="htmlcup.js"></script><script type="text/javascript">(function() {
-
   window.timerman = function(win) {
     var clearInterval, clearTimeout, intervals, lib, setInterval, setTimeout, timeouts;
     if (win == null) {
@@ -121,9 +120,11 @@ htmlcup.html5Page ->
       setInterval: function(code, delay) {
         var id;
         id = setInterval((function() {
+          var error;
           try {
             return code();
-          } catch (error) {
+          } catch (_error) {
+            error = _error;
             lib.clearInterval(id);
             throw error;
           }
@@ -313,7 +314,19 @@ htmlcup.html5Page ->
     updateSource = function(source) {
       var body, headStyles, headTitle, innerDocument, innerWindow, script, style, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _ref3;
       try {
-        _ref = CoffeeScript["eval"](source), body = _ref.body, headTitle = _ref.headTitle, headStyles = _ref.headStyles;
+        _ref = (function(htmlcup) {
+          var code, env;
+          env = eval("this");
+          env.htmlcup = htmlcup;
+          code = CoffeeScript.compile(source, {
+            bare: true
+          });
+          try {
+            return env["eval"]("" + code);
+          } finally {
+            env.htmlcup = htmlcup;
+          }
+        })(htmlcup), body = _ref.body, headTitle = _ref.headTitle, headStyles = _ref.headStyles;
         innerWindow = window.frames[0].window;
         if (timerManager != null) {
           timerManager.clearAll();

@@ -131,7 +131,14 @@ pageCoffeeScript = ->
   timerManager = null
   updateSource = (source) ->
     try
-      { body, headTitle, headStyles } = CoffeeScript.eval(source)
+      { body, headTitle, headStyles } = do (htmlcup) ->
+        env = eval "this"
+        env.htmlcup = htmlcup
+        code = CoffeeScript.compile(source, bare: true)
+        try
+          env.eval "#{code}"
+        finally
+          env.htmlcup = htmlcup
       innerWindow = window.frames[0].window
       if timerManager?
         timerManager.clearAll()
