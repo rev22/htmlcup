@@ -2,7 +2,7 @@
 
 htmlcup.html5Page ->
   @head ->
-    @title "hmlcup, caffeinated HTML"
+    @title "htmlcup, caffeinated HTML"
     @cssStyle "body { background:cyan; font-size:18px; }"
   @body ->
     @h2 "@htmlcup - Generate HTML5 with CoffeeScript"
