@@ -353,7 +353,7 @@ htmlcup.html5Page ->
         #     @h2 \"Loops: print cubes of numbers from 1 to 100\"
         #     @span \"#{x*x*x} \" for x in [1..100]
         #     """
-    @javaScriptSource "http://js2coffee.org/scripts/coffeescript.min.js"
+    @javaScriptSource "/reflective-coffeescript/extras/coffee-script.js"
     @javaScriptSource "htmlcup.js"
     @embedScriptSource "vendor/rev22/timerman/timerman.coffee"
     @coffeeScript pageCoffeeScript
