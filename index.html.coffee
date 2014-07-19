@@ -180,7 +180,7 @@ pageCoffeeScript = ->
 
   # Start the ace editor
   upgradeTextareas = (areas, callback) ->
-    baseUrl = "http://github.com/ajaxorg/ace-builds/raw/3bfda31096cf3f42b77aac64eb788584ea796822/ace-builds/textarea/src/"
+    baseUrl = "http://github.com/ajaxorg/ace-builds/raw/3bfda31096cf3f42b77aac64eb788584ea796822/textarea/src/"
 
     areas = document.getElementsByClassName("aceTransform") unless areas
     areas = document.getElementsByTagName("textarea") unless areas
