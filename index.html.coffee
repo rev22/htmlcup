@@ -217,8 +217,8 @@ pageCoffeeScript = ->
             type_c = type + ".camel"
             p = 0
             loop
-              console.log match
-              console.log rgx.lastIndex
+              # console.log match
+              # console.log rgx.lastIndex
               q = rgx.lastIndex - 1
               s = value.substring(p, q)
               col = orig.call @, builder, col, { type, value: s }, s
