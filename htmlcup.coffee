@@ -127,4 +127,50 @@ lib = lib.extendObject
     icon = "data:image/x-icon;base64,#{icon}"
     @link rel:"shortcut icon", href:icon
 
+# Create a version of htmlcup that can be used in-browser
+htmlcup = htmlcup.extendObject
+    originalLib: htmlcup
+    capturedTokens: []
+    printHtml: (t) -> @capturedTokens.push t
+    captureHtml: (f) ->
+      o = @capturedTokens
+      @capturedTokens = []
+      f.apply @
+      p = @capturedTokens
+      @capturedTokens = o
+      r = p.join ""
+      @printHtml r
+      r
+
+    stripOuter: (x) ->
+      x.replace(/^<[^>]*>/, "").replace(/<[^>]*>$/, "")
+    capturedParts: {}
+    capturePart: (tagName, stripOuter = @stripOuter) -> ->
+      x = arguments
+      @capturedParts[tagName] =
+        stripOuter (@captureHtml ->
+          @originalLib[tagName].apply @, x
+        )
+    body: -> (@capturePart "body").apply @, arguments 
+    head: ->
+      lib = @.extendObject
+        title: -> (@capturePart "title").apply @, arguments
+        headStyles: []
+        style: ->
+          @headStyles.push (@capturePart "style").apply @, arguments
+      r = (lib.capturePart "head").apply lib, arguments
+      @capturedParts.headStyles = lib.headStyles
+      @capturedParts.headTitle = lib.capturedParts.title
+      r
+    # script: ->
+    #  scripts = (@capturedParts.scripts or= [])
+    #  push scripts, ((@capturePart "script").apply @, arguments)
+    html5Page: () ->
+      x = arguments
+      @captureHtml -> @originalLib.html5Page.apply @, x
+      r = @capturedParts
+      @capturedParts = {}
+      r
+
 (exports ? window).htmlcup = lib
+
