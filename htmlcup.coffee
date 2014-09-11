@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.1.0-inbrowser.8"
+version = "1.1.0-inbrowser.9"
   
 # Copyright (c) 2013 Michele Bini
 
@@ -127,9 +127,9 @@ lib = lib.extendObject
     icon = "data:image/x-icon;base64,#{icon}"
     @link rel:"shortcut icon", href:icon
 
-# Create a version of htmlcup that can be used in-browser
+# Create a version that can be used in-browser
 lib = lib.extendObject
-    originalLib: htmlcup
+    originalLib: lib
     capturedTokens: []
     printHtml: (t) -> @capturedTokens.push t
     captureHtml: (f) ->

@@ -3,7 +3,7 @@
   var lib, list2set, version,
     __slice = [].slice;
 
-  version = "1.1.0-inbrowser.8";
+  version = "1.1.0-inbrowser.9";
 
   list2set = function(l) {
     var r, x, _i, _len;
@@ -203,7 +203,7 @@
   });
 
   lib = lib.extendObject({
-    originalLib: htmlcup,
+    originalLib: lib,
     capturedTokens: [],
     printHtml: function(t) {
       return this.capturedTokens.push(t);
