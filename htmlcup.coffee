@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.1.0-pre.7"
+version = "1.1.0-pre.10"
   
 # Copyright (c) 2013 Michele Bini
 
@@ -32,13 +32,13 @@ lib =
   printHtml: (t) -> process.stdout.write t
   quoteTagText: (str) ->
     str.replace /[&<]/g, (c) ->
-      if c is '<' then "&lt;" else "&amp;"
+      if c is '<' then '&lt;' else '&amp;'
   quoteText: (str) ->
     str.replace /[&<"]/g, (c) ->              # "
-      if c is '<' then "&lt;"
+      if c is '<' then '&lt;'
       else if c is '&'
-      then "&amp;"
-      else '"'
+      then '&amp;'
+      else '&quot;'
   docType: -> @printHtml "<!DOCTYPE html>\n"
   # References:
   #  http://www.w3.org/TR/html5/syntax.html
