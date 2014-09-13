@@ -3,7 +3,7 @@
   var lib, list2set, version,
     __slice = [].slice;
 
-  version = "1.1.0-pre.7";
+  version = "1.1.0-pre.10";
 
   list2set = function(l) {
     var r, x, _i, _len;
@@ -37,20 +37,20 @@
     quoteTagText: function(str) {
       return str.replace(/[&<]/g, function(c) {
         if (c === '<') {
-          return "&lt;";
+          return '&lt;';
         } else {
-          return "&amp;";
+          return '&amp;';
         }
       });
     },
     quoteText: function(str) {
       return str.replace(/[&<"]/g, function(c) {
         if (c === '<') {
-          return "&lt;";
+          return '&lt;';
         } else if (c === '&') {
-          return "&amp;";
+          return '&amp;';
         } else {
-          return '"';
+          return '&quot;';
         }
       });
     },
