@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.1.0-pre.10"
+version = "1.2.0"
   
 # Copyright (c) 2013 Michele Bini
 
@@ -39,7 +39,7 @@ lib =
       else if c is '&'
       then '&amp;'
       else '&quot;'
-  docType: -> @printHtml "<!DOCTYPE html>\n"
+  docType: (name = 'HTML')-> @printHtml "<!DOCTYPE #{name}>\n"
   # References:
   #  http://www.w3.org/TR/html5/syntax.html
   #  http://www.w3.org/TR/html-markup/elements.html

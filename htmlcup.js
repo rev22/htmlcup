@@ -3,7 +3,7 @@
   var lib, list2set, version,
     __slice = [].slice;
 
-  version = "1.1.0-pre.10";
+  version = "1.2.0";
 
   list2set = function(l) {
     var r, x, _i, _len;
@@ -54,8 +54,11 @@
         }
       });
     },
-    docType: function() {
-      return this.printHtml("<!DOCTYPE html>\n");
+    docType: function(name) {
+      if (name == null) {
+        name = 'HTML';
+      }
+      return this.printHtml("<!DOCTYPE " + name + ">\n");
     },
     voidElements: list2set('area, base, br, col, command, embed, hr, img, input, keygen, link, meta, param, source, track, wbr'.split(/, */)),
     rawTextElements: list2set(['script', 'style']),
