@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.2.0-pre.1"
+version = "1.2.1"
   
 # Copyright (c) 2013, 2014 Michele Bini
 
