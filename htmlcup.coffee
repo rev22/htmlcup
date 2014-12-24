@@ -1,8 +1,8 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.2.0"
+version = "1.2.0-pre.1"
   
-# Copyright (c) 2013 Michele Bini
+# Copyright (c) 2013, 2014 Michele Bini
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the version 3 of the GNU General Public License
@@ -115,8 +115,10 @@ lib = lib.extendObject
   embedJavaScriptSource: (f) ->
     fs = require "fs"
     @javaScript (fs.readFileSync(f)).toString()
-  embedScriptSource: (f) ->
+  embedCssStyleSource: (f) ->
     fs = require "fs"
+    @cssStyle (fs.readFileSync(f)).toString()
+  embedScriptSource: (f) ->
     if /\.coffee$/.test(f)
       @embedCoffeeScriptSource f
     else
