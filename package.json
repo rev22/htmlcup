@@ -1,6 +1,6 @@
 {
     "name": "htmlcup",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "author": "Michele Bini <michele.bini@gmail.com>",
     "description": "Generate HTML5 with CoffeeScript, instead of a templating engine.  Readily extensible library.",
     "keywords": [ "HTML", "CoffeeScript" ],

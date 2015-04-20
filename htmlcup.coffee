@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.2.5"
+version = "1.2.6"
   
 # Copyright (c) 2013, 2014, 2015 Michele Bini
 
@@ -119,7 +119,7 @@ lib = lib.extendObject
         else
           "#{p} #{s}"
     for line in lines
-      if parts = /^[ ]*([^ ][^:]*): *([^ ].*)/.exec line
+      if parts = /^[ ]*([^ ][^:]*): +([^ ].*)/.exec line
         (context.lines ?= [ ]).push parts[1] + ": " + parts[2]
       else if parts = /^([ ]*)([^ ].*)/.exec line
         flush()

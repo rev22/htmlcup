@@ -2,7 +2,7 @@
 var lib, list2set, version,
   __slice = [].slice;
 
-version = "1.2.5";
+version = "1.2.6";
 
 list2set = function(l) {
   var r, x, _i, _len;
@@ -184,7 +184,7 @@ lib = lib.extendObject({
       };
       for (_i = 0, _len = lines.length; _i < _len; _i++) {
         line = lines[_i];
-        if (parts = /^[ ]*([^ ][^:]*): *([^ ].*)/.exec(line)) {
+        if (parts = /^[ ]*([^ ][^:]*): +([^ ].*)/.exec(line)) {
           ((_ref = context.lines) != null ? _ref : context.lines = []).push(parts[1] + ": " + parts[2]);
         } else if (parts = /^([ ]*)([^ ].*)/.exec(line)) {
           flush();
