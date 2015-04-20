@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.2.1"
+version = "1.2.3"
   
 # Copyright (c) 2013, 2014 Michele Bini
 
@@ -70,7 +70,7 @@ track, u, ul, var, video, wbr
         s = arg
         break
       for x,y of arg
-        if y?
+        if y? and y isnt ""
           @printHtml " #{x}=\"#{@quoteText y}\""
         else
           @printHtml " #{x}"

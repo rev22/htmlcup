@@ -2,7 +2,7 @@
 var lib, list2set, version,
   __slice = [].slice;
 
-version = "1.2.1";
+version = "1.2.3";
 
 list2set = function(l) {
   var r, x, _i, _len;
@@ -79,7 +79,7 @@ lib = {
         }
         for (x in arg) {
           y = arg[x];
-          if (y != null) {
+          if ((y != null) && y !== "") {
             this.printHtml(" " + x + "=\"" + (this.quoteText(y)) + "\"");
           } else {
             this.printHtml(" " + x);
