@@ -1,8 +1,8 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.1.0-pre.10"
+version = "1.2.4"
   
-# Copyright (c) 2013 Michele Bini
+# Copyright (c) 2013, 2014, 2015 Michele Bini
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the version 3 of the GNU General Public License
@@ -39,7 +39,7 @@ lib =
       else if c is '&'
       then '&amp;'
       else '&quot;'
-  docType: -> @printHtml "<!DOCTYPE html>\n"
+  docType: (name = 'HTML')-> @printHtml "<!DOCTYPE #{name}>\n"
   # References:
   #  http://www.w3.org/TR/html5/syntax.html
   #  http://www.w3.org/TR/html-markup/elements.html
@@ -70,7 +70,7 @@ track, u, ul, var, video, wbr
         s = arg
         break
       for x,y of arg
-        if y?
+        if y? and y isnt ""
           @printHtml " #{x}=\"#{@quoteText y}\""
         else
           @printHtml " #{x}"
@@ -98,6 +98,41 @@ lib = lib.extendObject
   libraryVersion: version
   cssStyle:    (x) -> @style type: 'text/css', x
   javaScript:  (x) -> @script type: "text/javascript", (x.replace("</", "<\/"))
+  sassyStyle: (x)-> @cssStyle do->
+    # A tiny Sass subset
+    lines = x.split "\n"
+    context = { }
+    output = [ ]
+    flush = ->
+      if context.selector? and context.lines?
+        output.push context.selector + " {\n  " + context.lines.join(";\n  ") + ";\n}\n"
+      context.lines = null
+    extend = (s, p)->
+      return s unless p?
+      /,/.test s then
+         (extend(x,p) for x in s.split /, */).join ', '
+      else /,/.test p then
+        (extend(s,x) for x in p.split /, */).join ', '
+      else
+        if /[&]/.test s then
+          s.replace /[&]/g, p
+        else
+          "#{p} #{s}"
+    for line in lines
+      parts = /^[ ]*([^ ][^:]*): *([^ ].*)/.exec line then
+        (context.lines ?= [ ]).push parts[1] + ": " + parts[2]
+      else parts = /^([ ]*)([^ ].*)/.exec line then
+        flush()
+        level = parts[1].length
+        context.level? then
+          context.level < level then
+            context = parent: context
+          else while context.level and context.parent and level < context.level
+            context = context.parent
+        context.level = level
+        context.selector = extend parts[2], context.parent?.selector
+    flush()
+    output.join ''
   coffeeScript: (x) ->
     isString = (x) -> typeof x is "string" or x instanceof String
     codeToString = (x) ->
@@ -115,8 +150,10 @@ lib = lib.extendObject
   embedJavaScriptSource: (f) ->
     fs = require "fs"
     @javaScript (fs.readFileSync(f)).toString()
-  embedScriptSource: (f) ->
+  embedCssStyleSource: (f) ->
     fs = require "fs"
+    @cssStyle (fs.readFileSync(f)).toString()
+  embedScriptSource: (f) ->
     if /\.coffee$/.test(f)
       @embedCoffeeScriptSource f
     else
