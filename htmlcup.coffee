@@ -1,6 +1,6 @@
 # htmlcup.coffee - HTML5 generating library
 
-version = "1.2.4"
+version = "1.2.5"
   
 # Copyright (c) 2013, 2014, 2015 Michele Bini
 
@@ -39,7 +39,7 @@ lib =
       else if c is '&'
       then '&amp;'
       else '&quot;'
-  docType: (name = 'HTML')-> @printHtml "<!DOCTYPE #{name}>\n"
+  docType: (name = 'html')-> @printHtml "<!DOCTYPE #{name}>\n"
   # References:
   #  http://www.w3.org/TR/html5/syntax.html
   #  http://www.w3.org/TR/html-markup/elements.html
@@ -88,7 +88,7 @@ track, u, ul, var, video, wbr
     h[x] = @compileTag(x, ((@voidElements[x])?), ((@rawTextElements[x])?)) for x in @allElements
     @.extendObject h
   html5Page: (args...) ->
-    @docType 5
+    @docType()
     @html.apply @, args
 
 lib = lib.compileLib()
@@ -109,23 +109,23 @@ lib = lib.extendObject
       context.lines = null
     extend = (s, p)->
       return s unless p?
-      /,/.test s then
+      if /,/.test(s)
          (extend(x,p) for x in s.split /, */).join ', '
-      else /,/.test p then
+      else if /,/.test p
         (extend(s,x) for x in p.split /, */).join ', '
       else
-        if /[&]/.test s then
+        if /[&]/.test s
           s.replace /[&]/g, p
         else
           "#{p} #{s}"
     for line in lines
-      parts = /^[ ]*([^ ][^:]*): *([^ ].*)/.exec line then
+      if parts = /^[ ]*([^ ][^:]*): *([^ ].*)/.exec line
         (context.lines ?= [ ]).push parts[1] + ": " + parts[2]
-      else parts = /^([ ]*)([^ ].*)/.exec line then
+      else if parts = /^([ ]*)([^ ].*)/.exec line
         flush()
         level = parts[1].length
-        context.level? then
-          context.level < level then
+        if context.level?
+          if context.level < level
             context = parent: context
           else while context.level and context.parent and level < context.level
             context = context.parent
