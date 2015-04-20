@@ -2,7 +2,7 @@
 var lib, list2set, version,
   __slice = [].slice;
 
-version = "1.2.3";
+version = "1.2.5";
 
 list2set = function(l) {
   var r, x, _i, _len;
@@ -55,7 +55,7 @@ lib = {
   },
   docType: function(name) {
     if (name == null) {
-      name = 'HTML';
+      name = 'html';
     }
     return this.printHtml("<!DOCTYPE " + name + ">\n");
   },
@@ -116,7 +116,7 @@ lib = {
   html5Page: function() {
     var args;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    this.docType(5);
+    this.docType();
     return this.html.apply(this, args);
   }
 };
@@ -135,6 +135,78 @@ lib = lib.extendObject({
     return this.script({
       type: "text/javascript"
     }, x.replace("</", "<\/"));
+  },
+  sassyStyle: function(x) {
+    return this.cssStyle((function() {
+      var context, extend, flush, level, line, lines, output, parts, _i, _len, _ref, _ref1;
+      lines = x.split("\n");
+      context = {};
+      output = [];
+      flush = function() {
+        if ((context.selector != null) && (context.lines != null)) {
+          output.push(context.selector + " {\n  " + context.lines.join(";\n  ") + ";\n}\n");
+        }
+        return context.lines = null;
+      };
+      extend = function(s, p) {
+        if (p == null) {
+          return s;
+        }
+        if (/,/.test(s)) {
+          return ((function() {
+            var _i, _len, _ref, _results;
+            _ref = s.split(/, */);
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              x = _ref[_i];
+              _results.push(extend(x, p));
+            }
+            return _results;
+          })()).join(', ');
+        } else if (/,/.test(p)) {
+          return ((function() {
+            var _i, _len, _ref, _results;
+            _ref = p.split(/, */);
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              x = _ref[_i];
+              _results.push(extend(s, x));
+            }
+            return _results;
+          })()).join(', ');
+        } else {
+          if (/[&]/.test(s)) {
+            return s.replace(/[&]/g, p);
+          } else {
+            return "" + p + " " + s;
+          }
+        }
+      };
+      for (_i = 0, _len = lines.length; _i < _len; _i++) {
+        line = lines[_i];
+        if (parts = /^[ ]*([^ ][^:]*): *([^ ].*)/.exec(line)) {
+          ((_ref = context.lines) != null ? _ref : context.lines = []).push(parts[1] + ": " + parts[2]);
+        } else if (parts = /^([ ]*)([^ ].*)/.exec(line)) {
+          flush();
+          level = parts[1].length;
+          if (context.level != null) {
+            if (context.level < level) {
+              context = {
+                parent: context
+              };
+            } else {
+              while (context.level && context.parent && level < context.level) {
+                context = context.parent;
+              }
+            }
+          }
+          context.level = level;
+          context.selector = extend(parts[2], (_ref1 = context.parent) != null ? _ref1.selector : void 0);
+        }
+      }
+      flush();
+      return output.join('');
+    })());
   },
   coffeeScript: function(x) {
     var codeToString, isString;
